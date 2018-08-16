@@ -1,0 +1,110 @@
+---
+swagger: "2.0"
+info:
+  version: "2018-08-02T04:31:09Z"
+  title: "Core API"
+host: "api.id.nec.com.au"
+basePath: "/v1"
+schemes:
+- "https"
+paths:
+  /face/search:
+    post:
+      operationId: "ApiFaceSearchPost"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/ArrayOfSearchResult"
+      security:
+      - api_key: []
+    options:
+      responses: {}
+  /face/verify:
+    post:
+      operationId: "ApiFaceVerifyPost"
+      responses:
+        200:
+          description: "200 response"
+      security:
+      - api_key: []
+    options:
+      responses: {}
+  /health:
+    get:
+      responses: {}
+    options:
+      responses: {}
+  /subjects:
+    post:
+      operationId: "ApiSubjectsPost"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/RegisterResponseModel"
+      security:
+      - api_key: []
+    options:
+      responses: {}
+  /subjects/{id}:
+    put:
+      operationId: "ApiSubjectsByIdPut"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+      security:
+      - api_key: []
+    delete:
+      operationId: "ApiSubjectsByIdDelete"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+      security:
+      - api_key: []
+    options:
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "string"
+      responses: {}
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "x-api-key"
+    in: "header"
+definitions:
+  RegisterResponseModel:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+  SearchResult:
+    type: "object"
+    properties:
+      externalId:
+        type: "string"
+      eventId:
+        type: "string"
+      score:
+        type: "integer"
+        format: "int32"
+  ArrayOfSearchResult:
+    type: "array"
+    items:
+      $ref: "#/definitions/SearchResult"
