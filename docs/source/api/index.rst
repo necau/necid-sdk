@@ -23,7 +23,7 @@ The following is an example of a request with the Authorization and x-amz-date h
       Accept: application/json
       x-amz-date: 20180816T032046Z
       Authorization: AWS4-HMAC-SHA256
-      Credential=AKIAIOSFODNN7EXAMPLE/20130524/ap-southeast-2/execute-api/aws4_request,
+      Credential=AKIAIOSFODNN8EXAMPLE/20130524/ap-southeast-2/execute-api/aws4_request,
       SignedHeaders=content-length;content-type;host;x-amz-date;x-api-key, 
       Signature=fe5f80f77d5fa3beca038a248ff027d0445342fe2855ddc963176630326f1024
 
