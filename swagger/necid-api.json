@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2018-08-02T04:31:09Z",
+    "version": "2018-10-29T02:37:36Z",
     "title": "Core API"
   },
   "host": "api.id.nec.com.au",
@@ -10,6 +10,40 @@
     "https"
   ],
   "paths": {
+    "/face/extract": {
+      "post": {
+        "operationId": "ApiFaceExtractPost",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/ExtractResult"
+            }
+          },
+          "404": {
+            "description": "404 response"
+          }
+        },
+        "security": [
+          {
+            "sigv4": []
+          },
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "options": {
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
+      }
+    },
     "/face/search": {
       "post": {
         "operationId": "ApiFaceSearchPost",
@@ -20,44 +54,78 @@
           "200": {
             "description": "200 response",
             "schema": {
-              "$ref": "#/definitions/ArrayOfSearchResult"
+              "$ref": "#/definitions/SearchResult"
             }
+          },
+          "404": {
+            "description": "404 response"
           }
         },
         "security": [
+          {
+            "sigv4": []
+          },
           {
             "api_key": []
           }
         ]
       },
       "options": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       }
     },
     "/face/verify": {
       "post": {
         "operationId": "ApiFaceVerifyPost",
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Candidate"
+            }
+          },
+          "404": {
+            "description": "404 response"
           }
         },
         "security": [
+          {
+            "sigv4": []
+          },
           {
             "api_key": []
           }
         ]
       },
       "options": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       }
     },
     "/health": {
       "get": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       },
       "options": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       }
     },
     "/subjects": {
@@ -67,26 +135,36 @@
           "application/json"
         ],
         "responses": {
-          "200": {
-            "description": "200 response",
+          "201": {
+            "description": "201 response",
             "schema": {
-              "$ref": "#/definitions/RegisterResponseModel"
+              "$ref": "#/definitions/Subject"
             }
           }
         },
         "security": [
+          {
+            "sigv4": []
+          },
           {
             "api_key": []
           }
         ]
       },
       "options": {
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       }
     },
     "/subjects/{id}": {
       "put": {
         "operationId": "ApiSubjectsByIdPut",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -97,10 +175,19 @@
         ],
         "responses": {
           "200": {
-            "description": "200 response"
+            "description": "200 response",
+            "schema": {
+              "$ref": "#/definitions/Subject"
+            }
+          },
+          "404": {
+            "description": "404 response"
           }
         },
         "security": [
+          {
+            "sigv4": []
+          },
           {
             "api_key": []
           }
@@ -117,11 +204,17 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "200 response"
+          "204": {
+            "description": "204 response"
+          },
+          "404": {
+            "description": "404 response"
           }
         },
         "security": [
+          {
+            "sigv4": []
+          },
           {
             "api_key": []
           }
@@ -136,7 +229,11 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "200 response"
+          }
+        }
       }
     }
   },
@@ -145,24 +242,19 @@
       "type": "apiKey",
       "name": "x-api-key",
       "in": "header"
+    },
+    "sigv4": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "x-amazon-apigateway-authtype": "awsSigv4"
     }
   },
   "definitions": {
-    "RegisterResponseModel": {
+    "Candidate": {
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
-        }
-      }
-    },
-    "SearchResult": {
-      "type": "object",
-      "properties": {
-        "externalId": {
-          "type": "string"
-        },
-        "eventId": {
           "type": "string"
         },
         "score": {
@@ -171,10 +263,119 @@
         }
       }
     },
-    "ArrayOfSearchResult": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/SearchResult"
+    "Attributes": {
+      "type": "object",
+      "properties": {
+        "faceArea": {
+          "type": "object",
+          "properties": {
+            "left": {
+              "type": "string"
+            },
+            "top": {
+              "type": "string"
+            },
+            "right": {
+              "type": "string"
+            },
+            "bottom": {
+              "type": "string"
+            }
+          }
+        },
+        "headArea": {
+          "type": "object",
+          "properties": {
+            "left": {
+              "type": "string"
+            },
+            "top": {
+              "type": "string"
+            },
+            "right": {
+              "type": "string"
+            },
+            "bottom": {
+              "type": "string"
+            }
+          }
+        },
+        "rightEyeCenter": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            }
+          }
+        },
+        "leftEyeCenter": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "string"
+            },
+            "y": {
+              "type": "string"
+            }
+          }
+        },
+        "frontalFaceScore": {
+          "type": "string"
+        },
+        "faceRoll": {
+          "type": "string"
+        },
+        "facePan": {
+          "type": "string"
+        },
+        "faceTilt": {
+          "type": "string"
+        },
+        "faceScore": {
+          "type": "string"
+        },
+        "faceQualityScore": {
+          "type": "string"
+        }
+      }
+    },
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Candidate"
+          }
+        },
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }
+      }
+    },
+    "ExtractResult": {
+      "type": "object",
+      "properties": {
+        "faces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Attributes"
+          }
+        }
+      }
+    },
+    "Subject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }
       }
     }
   }

@@ -14,7 +14,17 @@
  */
  
 
-#import "NECIDCandidates.h"
+#import "NECIDAttributes_faceArea.h"
 
-@implementation NECIDCandidates
+@implementation NECIDAttributes_faceArea
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    return @{
+             @"left": @"left",
+             @"top": @"top",
+             @"right": @"right",
+             @"bottom": @"bottom"
+             };
+}
+
 @end

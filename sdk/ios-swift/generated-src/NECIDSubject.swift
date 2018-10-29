@@ -21,11 +21,16 @@ import AWSCore
 public class NECIDSubject : AWSModel {
     
     var id: String?
+    var attributes: NECIDAttributes?
     
    	public override static func jsonKeyPathsByPropertyKey() -> [AnyHashable : Any]!{
 		var params:[AnyHashable : Any] = [:]
 		params["id"] = "id"
+		params["attributes"] = "attributes"
 		
         return params
+	}
+	class func attributesJSONTransformer() -> ValueTransformer{
+	    return ValueTransformer.awsmtl_JSONDictionaryTransformer(withModelClass: NECIDAttributes.self);
 	}
 }

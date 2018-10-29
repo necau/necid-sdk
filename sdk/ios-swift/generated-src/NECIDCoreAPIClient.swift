@@ -158,9 +158,9 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
      
      
      
-     return type: NECIDCandidates
+     return type: NECIDExtractResult
      */
-    public func faceSearchPost() -> AWSTask<NECIDCandidates> {
+    public func faceExtractPost() -> AWSTask<NECIDExtractResult> {
 	    let headerParameters = [
                    "Content-Type": "application/json",
                    "Accept": "application/json",
@@ -171,7 +171,49 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	    
 	    let pathParameters:[String:Any] = [:]
 	    
-	    return self.invokeHTTPRequest("POST", urlString: "/face/search", pathParameters: pathParameters, queryParameters: queryParameters, headerParameters: headerParameters, body: nil, responseClass: NECIDCandidates.self) as! AWSTask<NECIDCandidates>
+	    return self.invokeHTTPRequest("POST", urlString: "/face/extract", pathParameters: pathParameters, queryParameters: queryParameters, headerParameters: headerParameters, body: nil, responseClass: NECIDExtractResult.self) as! AWSTask<NECIDExtractResult>
+	}
+
+	
+    /*
+     
+     
+     
+     return type: 
+     */
+    public func faceExtractOptions() -> AWSTask<AnyObject> {
+	    let headerParameters = [
+                   "Content-Type": "application/json",
+                   "Accept": "application/json",
+                   
+	            ]
+	    
+	    let queryParameters:[String:Any] = [:]
+	    
+	    let pathParameters:[String:Any] = [:]
+	    
+	    return self.invokeHTTPRequest("OPTIONS", urlString: "/face/extract", pathParameters: pathParameters, queryParameters: queryParameters, headerParameters: headerParameters, body: nil, responseClass: nil)
+	}
+
+	
+    /*
+     
+     
+     
+     return type: NECIDSearchResult
+     */
+    public func faceSearchPost() -> AWSTask<NECIDSearchResult> {
+	    let headerParameters = [
+                   "Content-Type": "application/json",
+                   "Accept": "application/json",
+                   
+	            ]
+	    
+	    let queryParameters:[String:Any] = [:]
+	    
+	    let pathParameters:[String:Any] = [:]
+	    
+	    return self.invokeHTTPRequest("POST", urlString: "/face/search", pathParameters: pathParameters, queryParameters: queryParameters, headerParameters: headerParameters, body: nil, responseClass: NECIDSearchResult.self) as! AWSTask<NECIDSearchResult>
 	}
 
 	

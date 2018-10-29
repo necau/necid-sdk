@@ -20,8 +20,13 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
-             @"_id": @"id"
+             @"_id": @"id",
+             @"attributes": @"attributes"
              };
+}
+
++ (NSValueTransformer *)attributesJSONTransformer {
+    return [NSValueTransformer awsmtl_JSONDictionaryTransformerWithModelClass:[NECIDAttributes class]];
 }
 
 @end

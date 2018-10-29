@@ -94,7 +94,7 @@ to your list of imports in the bridging header.
 1. You can now call your method using the client SDK
 
 		
-		client.faceSearchPost).continueWithBlock{ (task: AWSTask?) -> AnyObject? in 
+		client.faceExtractPost).continueWithBlock{ (task: AWSTask?) -> AnyObject? in 
 		    if let error = task.error {
                 print("Error occurred: \(error)")
                 return nil

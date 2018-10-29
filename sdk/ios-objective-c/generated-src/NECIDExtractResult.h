@@ -14,11 +14,14 @@
  */
  
 
-import Foundation
-import AWSCore
+#import <Foundation/Foundation.h>
+#import <AWSCore/AWSCore.h>
+#import "NECIDAttributes.h"
 
  
-public class NECIDCandidates : AWSModel {
-    
-    
-}
+@interface NECIDExtractResult : AWSModel
+
+@property (nonatomic, strong, nullable) NSArray *faces;
+
+
+@end

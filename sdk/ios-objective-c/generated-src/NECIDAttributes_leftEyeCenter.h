@@ -16,9 +16,14 @@
 
 #import <Foundation/Foundation.h>
 #import <AWSCore/AWSCore.h>
-#import "NECIDCandidate.h"
 
  
-@interface NECIDCandidates : NECIDCandidate
+@interface NECIDAttributes_leftEyeCenter : AWSModel
+
+@property (nonatomic, strong, nullable) NSString *x;
+
+
+@property (nonatomic, strong, nullable) NSString *y;
+
 
 @end

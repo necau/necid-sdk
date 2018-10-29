@@ -20,7 +20,8 @@
 #import <AWSCore/AWSSignature.h>
 #import <AWSCore/AWSSynchronizedMutableDictionary.h>
 
-#import "NECIDCandidates.h"
+#import "NECIDExtractResult.h"
+#import "NECIDSearchResult.h"
 #import "NECIDCandidate.h"
 #import "NECIDSubject.h"
 
@@ -150,6 +151,50 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     return self;
 }
 
+- (AWSTask *)faceExtractPost {
+    NSDictionary *headerParameters = @{
+                                       @"Content-Type": @"application/json",
+                                       @"Accept": @"application/json",
+                                       
+                                       };
+    NSDictionary *queryParameters = @{
+                                      
+                                      };
+    NSDictionary *pathParameters = @{
+                                     
+                                     };
+    
+    return [self invokeHTTPRequest:@"POST"
+                         URLString:@"/face/extract"
+                    pathParameters:pathParameters
+                   queryParameters:queryParameters
+                  headerParameters:headerParameters
+                              body:nil
+                     responseClass:[NECIDExtractResult class]];
+}
+
+- (AWSTask *)faceExtractOptions {
+    NSDictionary *headerParameters = @{
+                                       @"Content-Type": @"application/json",
+                                       @"Accept": @"application/json",
+                                       
+                                       };
+    NSDictionary *queryParameters = @{
+                                      
+                                      };
+    NSDictionary *pathParameters = @{
+                                     
+                                     };
+    
+    return [self invokeHTTPRequest:@"OPTIONS"
+                         URLString:@"/face/extract"
+                    pathParameters:pathParameters
+                   queryParameters:queryParameters
+                  headerParameters:headerParameters
+                              body:nil
+                     responseClass:nil];
+}
+
 - (AWSTask *)faceSearchPost {
     NSDictionary *headerParameters = @{
                                        @"Content-Type": @"application/json",
@@ -169,7 +214,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
                    queryParameters:queryParameters
                   headerParameters:headerParameters
                               body:nil
-                     responseClass:[NECIDCandidates class]];
+                     responseClass:[NECIDSearchResult class]];
 }
 
 - (AWSTask *)faceSearchOptions {

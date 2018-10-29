@@ -17,7 +17,8 @@
 #import <Foundation/Foundation.h>
 #import <AWSAPIGateway/AWSAPIGateway.h>
 
-#import "NECIDCandidates.h"
+#import "NECIDExtractResult.h"
+#import "NECIDSearchResult.h"
 #import "NECIDCandidate.h"
 #import "NECIDSubject.h"
 
@@ -174,7 +175,23 @@ NS_ASSUME_NONNULL_BEGIN
  
  
  
- return type: NECIDCandidates *
+ return type: NECIDExtractResult *
+ */
+- (AWSTask *)faceExtractPost;
+
+/**
+ 
+ 
+ 
+ return type: 
+ */
+- (AWSTask *)faceExtractOptions;
+
+/**
+ 
+ 
+ 
+ return type: NECIDSearchResult *
  */
 - (AWSTask *)faceSearchPost;
 

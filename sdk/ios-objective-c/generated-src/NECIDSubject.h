@@ -16,11 +16,15 @@
 
 #import <Foundation/Foundation.h>
 #import <AWSCore/AWSCore.h>
+#import "NECIDAttributes.h"
 
  
 @interface NECIDSubject : AWSModel
 
 @property (nonatomic, strong, nullable) NSString *_id;
+
+
+@property (nonatomic, strong, nullable) NECIDAttributes *attributes;
 
 
 @end

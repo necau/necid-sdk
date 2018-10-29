@@ -542,7 +542,7 @@ For example, a request to **register** endpoint which does not include the manda
 
       {
         "message": "face property must be provided.",
-        "errorCode": 10010,
+        "errorCode": 1001,
         "errorType": "InvalidRequest"
       }
 
@@ -556,10 +556,10 @@ For example, a request to **register** endpoint which does not include the manda
 Error Codes and Types
 +++++++++++++++++++++
 
-============== ===== ========================================================
+============== ==== ========================================================
 Type           Code  Description
-============== ===== ========================================================
-InvalidRequest 10010 Request is invalid, possible missing parameters.
-NoFace         10310 No face was found in the provided image.
-PoorQuality    10320 The overall ``faceQualityScore`` was too low to process.
-============== ===== ========================================================
+============== ==== ========================================================
+InvalidRequest 1001 Request is invalid, possible missing parameters.
+NoFace         2001 No face was found in the provided image.
+PoorQuality    2002 The overall ``faceQualityScore`` was too low to process.
+============== ==== ========================================================
