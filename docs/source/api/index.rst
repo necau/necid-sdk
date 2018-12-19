@@ -26,7 +26,7 @@ In addition, an application API Key must be included in each request using the *
 
    .. sourcecode:: http
 
-      POST /v1/subjects HTTP/1.1
+      POST /v1.1/subjects HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -65,7 +65,13 @@ Failure to include a valid API Key in the x-api-key header will result in a 403 
 REST Endpoints
 --------------
 
-NEC ID support endpoints for registering, updating and unregistering subjects, as well as performing face extraction, search and verification.
+NEC ID support endpoints for:
+
+- registering, updating and unregistering subjects;
+- registering, updating, listing and unregistering subject events;
+- performing face extraction, search and verification;
+- creating, renaming, deleting and retrieving tags
+- performing a bulk subject registration
 
 Subjects
 ~~~~~~~~
@@ -75,7 +81,7 @@ Manage subjects for search and verification matching.
 Register
 ++++++++
 
-.. http:post:: /v1/subjects
+.. http:post:: /v1.1/subjects
    
    Registers a new subject.
 
@@ -83,7 +89,7 @@ Register
 
    .. sourcecode:: http
 
-      POST /v1/subjects HTTP/1.1
+      POST /v1.1/subjects HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -91,10 +97,12 @@ Register
       Authorization: [AWS Signature Version 4]
 
       {
-        "face": "[FACE]"
+        "face": "[FACE]",
+        "tags": [ "visitor", "staff"]
       }
 
    :<json string face: Base64 encoded image.
+   :<json string[] tags: List of tag names to register the subject against.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader x-api-key: Application API Key.
@@ -110,7 +118,8 @@ Register
       Content-Type: application/json
 
       {
-        "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "id": "idguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "eventId": "eventguid-fcdf-49eb-9182-5a6825ed2a3b",
         "attributes": {
           "faceArea": {
                 "left": "161",
@@ -142,6 +151,7 @@ Register
       }
 
    :>json string id: Subject id.
+   :>json string eventId: Event id.
    :>json attributes: See `Face Attributes`_
    :resheader Content-Type: application/json
    :status 201: Subject has been created.
@@ -149,7 +159,7 @@ Register
 Update
 ++++++
 
-.. http:put:: /v1/subjects/(string:id)
+.. http:put:: /v1.1/subjects/(string:id)
 
    Update an existing subject.
 
@@ -157,7 +167,7 @@ Update
 
    .. sourcecode:: http
 
-      PUT /v1/subjects HTTP/1.1
+      PUT /v1.1/subjects/77c7ec17-eec5-440a-89fc-60817f5546c8 HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -165,11 +175,13 @@ Update
       Authorization: [AWS Signature Version 4]
 
       {
-        "face": "[FACE]"
+        "face": "[FACE]",
+        "tags": ["staff"]
       }
 
    :query id: Subject id.
    :<json string face: Base64 encoded image.
+   :<json string[] tags: List of tags.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader x-api-key: Application API Key.
@@ -185,6 +197,7 @@ Update
 
       {
         "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "eventId": "eventguid-fcdf-49eb-9182-5a6825ed2a3b",
         "attributes": {
           "faceArea": {
                 "left": "161",
@@ -216,6 +229,7 @@ Update
       }
 
    :>json string id: Subject id.
+   :>json string eventId: Event id.
    :>json attributes: See `Face Attributes`_
    :resheader Content-Type: application/json
    :status 200: Subject has been updated.
@@ -224,7 +238,7 @@ Update
 Unregister
 ++++++++++
 
-.. http:delete:: /v1/subjects/(string:id)
+.. http:delete:: /v1.1/subjects/(string:id)
 
    Unregister an existing subject.
 
@@ -232,7 +246,7 @@ Unregister
 
    .. sourcecode:: http
 
-      DELETE /v1/subjects HTTP/1.1
+      DELETE /v1.1/subjects HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -257,6 +271,251 @@ Unregister
    :status 204: Subject has been unregistered.
    :status 404: Subject with id not found.
 
+Events
+~~~~
+
+Events provides the ability to register multiple biometrics events for a subject. The API allows you to register, update, list and unregister subject events.
+
+List
++++++++
+
+.. http:get:: /v1.1/subjects/{string:id}/events
+
+   Retrieve all events for a subject.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /v1.1/subjects/(string:id)/events HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query id: Subject id.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "events": [
+          {
+            "id": "fb6688b5-caf3-4e0f-92b9-101a9e73a3ee",
+            "score": "7500"
+          },
+          {
+            "id": "95bcb5e9-f99a-41dc-8eb1-cd7b1b3dcdec",
+            "score": "7500"
+          }
+        ]
+      }
+
+Register
++++++++
+
+.. http:POST:: /v1.1/subjects/{string:id}/events
+
+   Register a new event for an existing subject.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/subjects/(string:id)/events HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "face": "[FACE]",
+        "tags": [ "visitor", "staff"]
+      }
+
+   :<json string face: Base64 encoded image.
+   :<json string[] tags: List of tag names to register the subject event against.
+   :query id: Subject id.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+  
+      HTTP/1.1 201 Created
+      Content-Type: application/json
+
+      {
+        "id": "idguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "eventId": "eventguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "attributes": {
+          "faceArea": {
+                "left": "161",
+                "top": "156",
+                "right": "318",
+                "bottom": "313"
+          },
+          "headArea": {
+                "left": "131",
+                "top": "86",
+                "right": "345",
+                "bottom": "343"
+          },
+          "rightEyeCenter": {
+                "x": "195",
+                "y": "198"
+          },
+          "leftEyeCenter": {
+                "x": "276",
+                "y": "191"
+          },
+          "frontalFaceScore": "0.569824",
+          "faceRoll": "4.93922",
+          "facePan": "-9.34863",
+          "faceTilt": "7.613",
+          "faceScore": "0.999591",
+          "faceQualityScore": "0.86541"
+        }
+      }
+
+   :>json string id: Subject id.
+   :>json string eventId: Event id.
+   :>json attributes: See `Face Attributes`_
+   :resheader Content-Type: application/json
+   :status 201: Subject has been created.
+
+Update
++++++++
+
+.. http:PUT:: /v1.1/subjects/{string:id}/events/{string:eventId}
+
+   Update an existing event.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      PUT /v1.1/subjects/(string:id)/events/(string:eventId) HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "face": "[FACE]",
+        "tags": [ "visitor", "staff"]
+      }
+
+   :<json string face: Base64 encoded image.
+   :<json string[] tags: List of tag names to register the subject event against.
+   :query id: Subject id.
+   :query eventId: Event id.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 201 Created
+      Content-Type: application/json
+
+      {
+        "id": "idguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "eventId": "eventguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "attributes": {
+          "faceArea": {
+                "left": "161",
+                "top": "156",
+                "right": "318",
+                "bottom": "313"
+          },
+          "headArea": {
+                "left": "131",
+                "top": "86",
+                "right": "345",
+                "bottom": "343"
+          },
+          "rightEyeCenter": {
+                "x": "195",
+                "y": "198"
+          },
+          "leftEyeCenter": {
+                "x": "276",
+                "y": "191"
+          },
+          "frontalFaceScore": "0.569824",
+          "faceRoll": "4.93922",
+          "facePan": "-9.34863",
+          "faceTilt": "7.613",
+          "faceScore": "0.999591",
+          "faceQualityScore": "0.86541"
+        }
+      }
+
+   :>json string id: Subject id.
+   :>json string eventId: Event id.
+   :>json attributes: See `Face Attributes`_
+   :resheader Content-Type: application/json
+   :status 200: Subject has been created.
+
+Unregister
+++++++++++
+
+.. http:delete:: /v1.1/subjects/(string:id)/events/(string:eventId)
+
+   Unregister an existing event.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /v1.1/subjects/(string:id)/events/(string:eventId) HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query id: Subject id.
+   :query eventId: Event id.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 204 OK
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 204: Event has been unregistered.
+   :status 404: Event with id not found.
+
 Face
 ~~~~
 
@@ -265,7 +524,7 @@ Extract faces, search and verify probe images against registered subjects.
 Extract
 +++++++
 
-.. http:post:: /v1/face/extract
+.. http:post:: /v1.1/face/extract
 
    Extract face attributes.
 
@@ -273,7 +532,7 @@ Extract
 
    .. sourcecode:: http
 
-      POST /v1/face/extract HTTP/1.1
+      POST /v1.1/face/extract HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -371,7 +630,7 @@ Extract
 Search
 ++++++
 
-.. http:post:: /v1/face/search
+.. http:post:: /v1.1/face/search
 
    Search for subjects using a probe.
 
@@ -379,7 +638,7 @@ Search
 
    .. sourcecode:: http
 
-      POST /v1/face/search HTTP/1.1
+      POST /v1.1/face/search HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -389,12 +648,14 @@ Search
       {
         "probe": "[PROBE]",
         "threshold": 7500,
-        "limit": 3
+        "limit": 3,
+        "tags": ["staff"]
       }
 
    :<json string probe: Base64 encoded image.
    :<json int threshold: optional score threshold, ranges from 0 to 9999, default is 7000.
    :<json int limit: optional limit, ranges from 1 to 50, default is 10.
+   :<json string[] tags: Provide a list of tag names to refine the search against just those tags.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader x-api-key: Application API Key.
@@ -462,7 +723,7 @@ Search
 Verify
 ++++++
 
-.. http:post:: /v1/face/verify
+.. http:post:: /v1.1/face/verify
 
    Verify a subject against a probe.
 
@@ -470,7 +731,7 @@ Verify
 
    .. sourcecode:: http
 
-      POST /v1/face/verify HTTP/1.1
+      POST /v1.1/face/verify HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       x-api-key: [Application API key]
@@ -508,6 +769,264 @@ Verify
    :status 200: Subject verified.
    :status 404: Subject not verified.
 
+Tags
+~~~~~~~~
+
+Create, update, delete and retrieve tags. Tags provide the ability to tag subjects and events. You can then search for subjects based on these tags.
+
+Tags must be created first using the create request. Each API key has a hard limit of 64 tags.
+
+Create
+++++++
+
+.. http:post:: /v1.1/tags/(string:name)
+
+   Create a tag.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/tags/staff HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query name: The tag name. Tag name must not be empty and must be unique.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 200: Tag created.
+
+Update
+++++++
+
+.. http:put:: /v1.1/tags/(string:oldName)/(string:newName)
+
+   Update a tag.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/tags/staff/employees HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query oldName: The tag's current name. 
+   :query newName: The tag's new name. Tag name must not be empty and must be unique.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 200: Tag updated.
+
+Delete
+++++++
+
+.. http:delete:: /v1.1/tags/(string:name)
+
+   Deletes a tag. Note that existing subjects and events are not updated.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /v1.1/tags/staff HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query name: The name of the tag to delete.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 200: Tag deleted.
+
+Jobs
+~~~~~~~~
+
+Jobs allow you to perform bulk operations on your gallery such as bulk registrations.
+
+Bulk Register
+++++++
+
+.. http:post:: /v1.1/jobs/bulkregister
+
+   Creates a job to run bulk registration against the supplied registrations.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/jobs/bulkregister HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "registrations": [
+          {
+            "filename": "1.jpg",
+            "tags": ["student", "staff"]
+          }
+        ],
+      }
+
+   :<json RegisterModel[] registrations: List of RegisterModels to be registered. See `RegisterModel`_.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "batchId": "77c7ec17-eec5-440a-89fc-60817f5546c8"
+      }
+
+   :resheader Content-Type: application/json
+   :status 200: Job created.
+
+Bulk Register Progress
+++++++
+
+.. http:get:: /v1.1/jobs/bulkregister/(string:batchId)/(string:pagingId?)
+
+   Retrieves the progress of the batch operation. In the event of the batch operation having more records than the maximum page size (1000), the results will be paged and the lastEvaluatedKey will contain a value that needs to be sent as the pagingId to retrieve the next page of data.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /v1.1/jobs/bulkregister/(string:batchId)/(string:pagingId?) HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query batchId: The batchId of the job. 
+   :query pagingId: (Optional) The lastEvaluatedKey from the previous request.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "batchId": "AE4AF2AF-1028-44D1-9B31-B4B77E285CF9",
+        "processsed": [
+          {
+            "id": "51448BB9-956D-44FD-89AC-A5065D30D084",
+            "filename": "1.jpg",
+            "attempts": "1",
+            "eventId": "9B242E16-B190-466E-A1C2-9E85F436775A",
+            "subjectId": "ED6D35B9-45EC-4A97-88F0-F064A829FC90",
+            "registerStatus": "",
+            "reason": "",
+            "status": "Processed",
+            "attributesJson": "..."
+          },
+          {
+            "id": "EFE569DA-AE74-43CC-A75F-BD85B07A7401",
+            "filename": "2.jpg",
+            "attempts": "1",
+            "eventId": "A0C3C5BB-F3BE-4428-AAC3-8C9631776364",
+            "subjectId": "46470396-113B-4726-A267-4267816EC8FB",
+            "registerStatus": "Failed",
+            "reason": "Image too small",
+            "status": "Processed",
+            "attributesJson": "..."
+          }
+        ],
+        "lastEvaluatedKey": "50D2750E-B0FD-4EF0-940D-98822260AF15"
+      }
+
+   :<json string batchId: Base64 encoded image.
+   :<json RegisterRequestSummary[] processed: List of records within the batch with a summary. See `RegisterRequestSummary`_
+   :resheader Content-Type: application/json
+   :status 200: OK
+
+RegisterModel
+~~~~~~~~~~~~~
+
+Object describing a bulk registration model from S3.
+
+:filename: name of file in S3 bucket
+:tags: List of tags
+
+
+RegisterRequestSummary
+~~~~~~~~~~~~~~~~~~~~~~
+
+Object describing a register request summary which contains the subjectId and eventId on success.
+
+:id: The operation id. Note this is not the subject or event id.
+:filename: The filename from the original request.
+:attempts: The number of attempts.
+:eventId: The event id on success.
+:subjectId: The subject id on success.
+:registerStatus: Once the status is "Processed", this will have a value of "Success" or "Failed".
+:reason: The failure reason on failure.
+:status: The status of the operation. Either "New" or "Processed".
+:attributesJson: The Face Attributes - see `Face Attributes`_
+
+
 Face Attributes
 ~~~~~~~~~~~~~~~
 
@@ -533,7 +1052,7 @@ In addition to the valid successful and unsuccessful status codes listed for eac
 
 For example, a request to **register** endpoint which does not include the mandatory ``face`` property, will return the following:
 
-.. http:POST:: /v1/subjects
+.. http:POST:: /v1.1/subjects
 
    .. sourcecode:: http
 
