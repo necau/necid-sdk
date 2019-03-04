@@ -1,0 +1,52 @@
+/**
+ * null
+ */
+package au.com.nec.id.client.model.transform;
+
+import javax.annotation.Generated;
+
+import com.amazonaws.SdkClientException;
+import com.amazonaws.Request;
+
+import com.amazonaws.http.HttpMethodName;
+import au.com.nec.id.client.model.*;
+import com.amazonaws.transform.Marshaller;
+
+import com.amazonaws.protocol.*;
+import com.amazonaws.annotation.SdkInternalApi;
+
+/**
+ * CreateTagRequest Marshaller
+ */
+@Generated("com.amazonaws:aws-java-sdk-code-generator")
+@SdkInternalApi
+public class CreateTagRequestProtocolMarshaller implements Marshaller<Request<CreateTagRequest>, CreateTagRequest> {
+
+    private static final OperationInfo SDK_OPERATION_BINDING = OperationInfo.builder().protocol(Protocol.API_GATEWAY).requestUri("/v1.1/tags/{name}")
+            .httpMethodName(HttpMethodName.POST).hasExplicitPayloadMember(false).hasPayloadMembers(false).serviceName("NECID").build();
+
+    private final com.amazonaws.opensdk.protect.protocol.ApiGatewayProtocolFactoryImpl protocolFactory;
+
+    public CreateTagRequestProtocolMarshaller(com.amazonaws.opensdk.protect.protocol.ApiGatewayProtocolFactoryImpl protocolFactory) {
+        this.protocolFactory = protocolFactory;
+    }
+
+    public Request<CreateTagRequest> marshall(CreateTagRequest createTagRequest) {
+
+        if (createTagRequest == null) {
+            throw new SdkClientException("Invalid argument passed to marshall(...)");
+        }
+
+        try {
+            final ProtocolRequestMarshaller<CreateTagRequest> protocolMarshaller = protocolFactory.createProtocolMarshaller(SDK_OPERATION_BINDING,
+                    createTagRequest);
+
+            protocolMarshaller.startMarshalling();
+            CreateTagRequestMarshaller.getInstance().marshall(createTagRequest, protocolMarshaller);
+            return protocolMarshaller.finishMarshalling();
+        } catch (Exception e) {
+            throw new SdkClientException("Unable to marshall request to JSON: " + e.getMessage(), e);
+        }
+    }
+
+}
