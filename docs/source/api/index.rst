@@ -927,8 +927,8 @@ List Tags
       Content-Type: application/json
 
       [
-        "staff",
-        "student"
+        "passport",
+        "licence"
       ]
 
    :>json array: Containing tag names.
@@ -985,7 +985,7 @@ Update Tag
 
    .. sourcecode:: http
 
-      POST /v1.1/tags/staff/employees HTTP/1.1
+      POST /v1.1/tags/licence HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       Content-Type: application/json
@@ -994,7 +994,7 @@ Update Tag
       Authorization: [AWS Signature Version 4]
 
       {
-        "newName": "employee"
+        "newName": "identification"
       }
 
    :<json string newName: The tag's new name. Tag name must not be empty and must be unique.
@@ -1027,7 +1027,7 @@ Delete Tag
 
    .. sourcecode:: http
 
-      DELETE /v1.1/tags/staff HTTP/1.1
+      DELETE /v1.1/tags/passport HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
       Content-Type: application/json
@@ -1116,7 +1116,7 @@ Bulk Register
 Bulk Register Progress
 ++++++++++++++++++++++
 
-.. http:get:: /v1.1/jobs/bulkregister/(string:batchId)/(string:pagingId?)
+.. http:get:: /v1.1/jobs/bulkregister/(string:batchId)/(string:pagingId)
 
    Retrieves the progress of the batch operation. In the event of the batch operation having more records than the maximum page size (1000), the results will be paged and the lastEvaluatedKey will contain a value that needs to be sent as the pagingId to retrieve the next page of data.
 
@@ -1157,7 +1157,7 @@ Bulk Register Progress
             "attempts": "1",
             "eventId": "eventguid-B190-466E-A1C2-9E85F436775A",
             "subjectId": "necidguid-45EC-4A97-88F0-F064A829FC90",
-            "registerStatus": "",
+            "registerStatus": "Success",
             "reason": "",
             "status": "Processed",
             "attributesJson": "..."
@@ -1226,7 +1226,7 @@ NEC ID support endpoints for:
 Galleries
 ~~~~~~~~~
 
-Manage tenant galleris.
+Manage tenant galleries.
 
 List Galleries
 ++++++++++++++
@@ -1294,7 +1294,7 @@ Create Gallery
 
 .. http:post:: /api/galleries
 
-   Create a gallery.
+   Create a gallery and an application with which to access it.
 
    **Example request**:
 
@@ -1354,7 +1354,7 @@ Delete Gallery
 
 .. http:delete:: /api/galleries/(string:galleryId)
 
-   Deletes a gallery.
+   Deletes a gallery and its realted applications.
 
    **Example request**:
 
@@ -1367,7 +1367,7 @@ Delete Gallery
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :param name: The name of the tag to delete.
+   :param galleryId: Gallery id.
    :reqheader Host: portal.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader Content-Type: application/json
@@ -1384,8 +1384,8 @@ Delete Gallery
    :resheader Content-Type: application/json
    :status 204: Gallery deleted.
 
-Errors
-~~~~~~
+Error Handling
+--------------
 
 In addition to the valid successful and unsuccessful status codes listed for each endpoint, exceptions will result in a error response (400 or 500 status code) with a JSON Object containing the error details.
 
@@ -1412,7 +1412,7 @@ For example, a request to **register** endpoint which does not include the manda
    :status 500: Server exception.
 
 Error Codes and Types
-+++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~
 
 ============== ==== =======================================================================================
 Type           Code Description
