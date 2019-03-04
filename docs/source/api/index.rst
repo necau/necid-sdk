@@ -5,9 +5,11 @@ Using the API
 
 NEC ID exposes a secure :abbr:`REST (Representational State Transfer)` API, allowing users to interact with the NEC ID biometric service over HTTPS. JSON is returned by all API responses including errors and HTTP response status codes are used to designate success and failure.
 
+The platform also provides a means to manage your tenancy configuration via secure :abbr:`REST (Representational State Transfer)` API, allowing tenants to provision new galleries and applications.
+
 The following documentation details the authentiction and authorisation requirements and the various endpoints.
 
-Download NEC ID API Swagger `JSON <https://github.com/necau/necid-sdk/blob/master/swagger/necid-api.json>`_ or  `YAML <https://github.com/necau/necid-sdk/blob/master/swagger/necid-api.yaml>`_
+Download NEC ID API Swagger `JSON <https://github.com/necau/necid-sdk/blob/master/swagger/necid-v1_1.json>`_ or  `YAML <https://github.com/necau/necid-sdk/blob/master/swagger/necid-v1_1.yaml>`_
 
 Authentication and Authorisation
 --------------------------------
@@ -20,7 +22,7 @@ Alternativly this header can be generated using the `Amazon's authenticating req
 
 The following is an example of a request with the **Authorization** and **x-amz-date** header values. Line breaks are added to this Authorization line for readability.
 
-In addition, an application API Key must be included in each request using the **x-api-key** header to identify the target application.
+In addition, an application API Key must be included in requests that pertain to a specific gallery by using the **x-api-key** header to identify the target application.
 
 **Example request**:
 
@@ -29,10 +31,11 @@ In addition, an application API Key must be included in each request using the *
       POST /v1.1/subjects HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
-      x-api-key: [Application API key]
+      Content-Type: application/json
+      x-api-key: 73n4n74p1k3y
       x-amz-date: 20180816T032046Z
       Authorization: AWS4-HMAC-SHA256
-      Credential=AKIAIOSFODNN8EXAMPLE/20130524/ap-southeast-2/execute-api/aws4_request,
+      Credential=AKIAIOSFODNN8EXAMPLE/20190304/ap-southeast-2/execute-api/aws4_request,
       SignedHeaders=content-length;content-type;host;x-amz-date;x-api-key, 
       Signature=fe5f80f77d5fa3beca038a248ff027d0445342fe2855ddc963176630326f1024
 
@@ -49,7 +52,7 @@ Failure to include a valid Authorization header will result in a 403 forbidden H
         "message": "Signature expired: 20180816T032046Z is now earlier than 20180816T040329Z (20180816T040829Z - 5 min.)"
       }
 
-Failure to include a valid API Key in the x-api-key header will result in a 403 forbidden HTTP response status codes, with a JSON message of Forbidden.
+Failure to include a valid API Key via the x-api-key header in particular requests will result in a 403 forbidden HTTP response status codes, with a JSON message of Forbidden.
 
 **Example response**:
 
@@ -62,21 +65,89 @@ Failure to include a valid API Key in the x-api-key header will result in a 403 
         "message": "Forbidden"
       }
 
-REST Endpoints
---------------
+Biometric REST Endpoints
+------------------------
 
 NEC ID support endpoints for:
 
-- registering, updating and unregistering subjects;
+- registering, updating, listing and unregistering subjects;
 - registering, updating, listing and unregistering subject events;
 - performing face extraction, search and verification;
-- creating, renaming, deleting and retrieving tags
-- performing a bulk subject registration
+- creating, renaming, deleting and retrieving tags;
+- performing a bulk subject registration;
 
 Subjects
 ~~~~~~~~
 
 Manage subjects for search and verification matching.
+
+List Subjects
++++++++++++++
+
+.. http:get:: /v1.1/subjects
+
+   Retrieve all subjects for a specific gallery.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /v1.1/subjects HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :query start: Optional starting index of the request, defaults to 0 if not provided.
+   :query length: Optional length of the list, defaults to 1000 if not provided. Limited to a maximum of 1000 per request.
+   :query dir: Optional last updated sort direction (asc or desc). default is asc.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "subjects": [
+          {
+            "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+            "eventId": "eventguid-caf3-4e0f-92b9-101a9e73a3ee",
+            "status": "ACTIVE",
+            "lastUpdated": "2018-12-18T00:27:56.427+00:00"
+          },
+          {
+            "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+            "eventId": "eventguid-f99a-41dc-8eb1-cd7b1b3dcdec",
+            "status": "DELETED",
+            "lastUpdated": "2019-02-28T18:11:49.157+00:00"
+          },
+          {
+            "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+            "eventId": "eventguid-f99a-41dc-8eb1-cd7b1b3dcdec",
+            "status": "ACTIVE",
+            "lastUpdated": "2019-02-28T18:11:49.174+00:00"
+          }
+        ],
+        "total": 3
+      }
+
+   :>json array subjects: Containing **id** *(string)*: Subject id, **eventId** *(string)*: Event id, **status** *(string)*: Status, **lastUpdated** *(ISO 8601 timestamp)*: Last Updated Time.
+   :>json int total: Total number of events in gallery.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+   :status 404: Subjects not found.
+
+.. note:: As a subject can have many events, the subject's id will be repeated for each of its eventIds. Plus, in order to reuse slots within a gallery, deleted events are flagged with a **status** of DELETED until the slot is recycled. This means that the list of subjects can include deleted subjects, plus subjects we have been updated, which appear as deleted and active with the same ids.
 
 Register Subject
 ++++++++++++++++
@@ -92,6 +163,7 @@ Register Subject
       POST /v1.1/subjects HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -105,6 +177,7 @@ Register Subject
    :<json array tags: Optional list of tag names to register against the subject.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -152,7 +225,7 @@ Register Subject
 
    :>json string id: Subject id.
    :>json string eventId: Event id.
-   :>json attributes: See `Face Attributes`_
+   :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 201: Subject has been created.
 
@@ -170,6 +243,7 @@ Update Subject
       PUT /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -179,11 +253,12 @@ Update Subject
         "tags": [ "passport" ]
       }
 
-   :query subjectId: Subject id.
+   :param subjectId: Subject id.
    :<json string face: Base64 encoded image.
    :<json array tags: Optional list of tag names to register against the subject.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -230,7 +305,7 @@ Update Subject
 
    :>json string id: Subject id.
    :>json string eventId: Event id.
-   :>json attributes: See `Face Attributes`_
+   :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 200: Subject has been updated.
    :status 404: Subject with id not found.
@@ -249,13 +324,15 @@ Unregister Subject
       DELETE /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query subjectId: Subject id.
+   :param subjectId: Subject id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -264,7 +341,7 @@ Unregister Subject
 
    .. sourcecode:: http
 
-      HTTP/1.1 204 OK
+      HTTP/1.1 204 No Content
       Content-Type: application/json
 
    :resheader Content-Type: application/json
@@ -290,13 +367,15 @@ List Events
       GET /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b/events HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query subjectId: Subject id.
+   :param subjectId: Subject id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -340,6 +419,7 @@ Register Event
       POST /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b/events HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -351,9 +431,10 @@ Register Event
 
    :<json string face: Base64 encoded image.
    :<json array tags: Optional list of tag names to register against the subject.
-   :query subjectId: Subject id.
+   :param subjectId: Subject id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -400,7 +481,7 @@ Register Event
 
    :>json string id: Subject id.
    :>json string eventId: Event id.
-   :>json attributes: See `Face Attributes`_
+   :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 201: Event has been created.
    :status 404: Subject with id not found.
@@ -419,6 +500,7 @@ Update Event
       PUT /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b/events/eventguid-f99a-41dc-8eb1-cd7b1b3dcdec HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -430,10 +512,11 @@ Update Event
 
    :<json string face: Base64 encoded image.
    :<json array tags: Optional list of tag names to register against the subject.
-   :query subjectId: Subject id.
-   :query eventId: Event id.
+   :param subjectId: Subject id.
+   :param eventId: Event id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -480,7 +563,7 @@ Update Event
 
    :>json string id: Subject id.
    :>json string eventId: Event id.
-   :>json attributes: See `Face Attributes`_
+   :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 200: Event has been updated.
    :status 404: Subject with id and eventId not found.
@@ -499,14 +582,16 @@ Unregister Event
       DELETE /v1.1/subjects/necidguid-fcdf-49eb-9182-5a6825ed2a3b/events/eventguid-f99a-41dc-8eb1-cd7b1b3dcdec HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query subjectId: Subject id.
-   :query eventId: Event id.
+   :param subjectId: Subject id.
+   :param eventId: Event id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -515,7 +600,7 @@ Unregister Event
 
    .. sourcecode:: http
 
-      HTTP/1.1 204 OK
+      HTTP/1.1 204 No Content
       Content-Type: application/json
 
    :resheader Content-Type: application/json
@@ -541,7 +626,7 @@ Extract
       POST /v1.1/face/extract HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
-      x-api-key: [Application API key]
+      Content-Type: application/json
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
@@ -552,7 +637,7 @@ Extract
    :<json string faces: Base64 encoded image containing one or more faces.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
-   :reqheader x-api-key: Application API Key.
+   :reqheader Content-Type: application/json
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
 
@@ -628,7 +713,7 @@ Extract
         ]
       }
 
-   :>json array faces: Containing **attributes**: See `Face Attributes`_
+   :>json array faces: Containing **attributes**: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 200: Candidates found.
    :status 404: Candidates not found.
@@ -647,6 +732,7 @@ Search
       POST /v1.1/face/search HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -664,6 +750,7 @@ Search
    :<json array tags: Option list of tag names to refine the search against, using OR to filter subjects.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -743,7 +830,7 @@ Search
       }
 
    :>json array candidates: Containing **id** *(string)*: Subject id and **score** *(int)*: Match score.
-   :>json attributes: See `Face Attributes`_
+   :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 200: Candidates found.
    :status 404: Candidates not found.
@@ -762,6 +849,7 @@ Verify
       POST /v1.1/face/verify HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -775,6 +863,7 @@ Verify
    :<json string id: Subject id.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -802,7 +891,51 @@ Tags
 
 Create, update, delete and retrieve tags. Tags provide the ability to tag subjects and events. You can then search for subjects based on these tags.
 
-Tags must be created first using the create request. Each API key has a hard limit of 64 tags.
+Tags must be created first, before using them in register and search requests.
+
+List Tags
++++++++++
+
+.. http:get:: /v1.1/tags
+
+   Retrieve all tags for a specific gallery.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /v1.1/tags HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      [
+        "staff",
+        "student"
+      ]
+
+   :>json array: Containing tag names.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+
+.. note:: Each gallery has a hard limit of 64 tags
 
 Create Tag
 ++++++++++
@@ -818,13 +951,15 @@ Create Tag
       POST /v1.1/tags/staff HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query name: The tag name. Tag name must not be empty and must be unique.
+   :param name: The tag name. Tag name must not be empty and must be unique.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -853,6 +988,7 @@ Update Tag
       POST /v1.1/tags/staff/employees HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -862,9 +998,10 @@ Update Tag
       }
 
    :<json string newName: The tag's new name. Tag name must not be empty and must be unique.
-   :query oldName: The tag's current name.
+   :param oldName: The tag's current name.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -893,13 +1030,15 @@ Delete Tag
       DELETE /v1.1/tags/staff HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query name: The name of the tag to delete.
+   :param name: The name of the tag to delete.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -933,6 +1072,7 @@ Bulk Register
       POST /v1.1/jobs/bulkregister HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
@@ -953,6 +1093,7 @@ Bulk Register
    :<json array registrations: Containing **filename** *(string)*: Name of file in S3 bucket and **tags** *(array)*: List of tags.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -968,6 +1109,7 @@ Bulk Register
         "batchId": "batchguid-eec5-440a-89fc-60817f5546c8"
       }
 
+   :>json string batchId: Batch id.
    :resheader Content-Type: application/json
    :status 200: Job created.
 
@@ -985,14 +1127,16 @@ Bulk Register Progress
       GET /v1.1/jobs/bulkregister/batchguid-eec5-440a-89fc-60817f5546c8 HTTP/1.1
       Host: api.id.nec.com.au
       Accept: application/json
+      Content-Type: application/json
       x-api-key: [Application API key]
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
-   :query batchId: The batchId of the job. 
-   :query pagingId: (Optional) The lastEvaluatedKey from the previous request.
+   :param batchId: The batchId of the job. 
+   :param pagingId: (Optional) The lastEvaluatedKey from the previous request.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
    :reqheader x-api-key: Application API Key.
    :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
    :reqheader Authorization: AWS Signature Version 4.
@@ -1033,9 +1177,9 @@ Bulk Register Progress
         "lastEvaluatedKey": ""
       }
 
-   :<json string batchId: Base64 encoded image.
-   :<json array processed: List of records within the batch with a summary. See `Register Request Summaries`_
-   :<json string lastEvaluatedKey: Key to be sent as the pagingId to retrieve the next page of data.
+   :>json string batchId: Batch Id.
+   :>json array processed: List of records within the batch with a summary. See `Register Request Summaries`_
+   :>json string lastEvaluatedKey: Key to be sent as the pagingId to retrieve the next page of data.
    :resheader Content-Type: application/json
    :status 200: OK
 
@@ -1052,7 +1196,7 @@ Object describing a register request summary which contains the subjectId and ev
 :registerStatus: Once the status is "Processed", this will have a value of "Success" or "Failed".
 :reason: The failure reason on failure.
 :status: The status of the operation. Either "New" or "Processed".
-:attributesJson: The Face Attributes - see `Face Attributes`_
+:attributesJson: The Face Attributes - see `Face Attributes`_.
 
 Face Attributes
 ~~~~~~~~~~~~~~~
@@ -1071,6 +1215,174 @@ Sucessful requests to the **register**, **update** and **search** endpoints will
 :faceTilt: Tilt angle of face in degrees.
 
 .. note:: The overall faceQualityScore should be used to determine the quality of the face prior to registration.
+
+Tenant Management REST Endpoints
+--------------------------------
+
+NEC ID support endpoints for:
+
+- creating and deleting galleries and applications with which to access them;
+
+Galleries
+~~~~~~~~~
+
+Manage tenant galleris.
+
+List Galleries
+++++++++++++++
+
+.. http:get:: /api/galleries
+
+   Retrieve all galleries.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /v1.1/tags HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "galleries": [
+          {
+            "id": "galleryguid-327D-4D31-8E25-35891A034220",
+            "name": "Staff",
+            "description": "Staff",
+            "size": 10000,
+            "count": 3891
+          },
+          {
+            "id": "galleryguid-5570-4f20-a95c-8e50e0bca0cb",
+            "name": "Y9Students",
+            "description": "Year 9 students",
+            "size": 1000,
+            "count": 873
+          },
+          {
+            "id": "galleryguid-b751-4b5e-9e4d-cc1a314788db",
+            "name": "Visitors",
+            "description": "Visitors",
+            "size": 10000,
+            "count": 431
+          }
+        ]
+      }
+
+   :>json array galleries: Containing **id** *(string)*: Gallery id, **name** *(string)*: Name, **description** *(string)*: Description, **size** *(int)*: Size, **count** *(int)*: Count.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+
+Create Gallery
+++++++++++++++
+
+.. http:post:: /api/galleries
+
+   Create a gallery.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/tags/staff HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "name": "Y10Students",
+        "description": "Year 10 Students",
+        "faceMinimumQualityScore": "0.8",
+        "size": 1000,
+      }
+
+   :<json string name: Name of the gallery.
+   :<json string description: Description of the gallery.
+   :<json string faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_.
+   :<json string size: Size of the gallery.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "galleryguid-28da-4dd4-b10b-e48c6be09689",
+        "name": "Y10Students",
+        "description": "Year 10 Students",
+        "size": 1000,
+        "apiKey": [Application API key]
+      }
+
+   :>json string id: Gallery id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json int size: Size.
+   :>json string apiKey: Application API Key.
+   :resheader Content-Type: application/json
+   :status 200: Gallery created.
+
+.. note:: The application API Key is only provided in response to creating a gallery.
+
+Delete Gallery
+++++++++++++++
+
+.. http:delete:: /api/galleries/(string:galleryId)
+
+   Deletes a gallery.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/gallery/galleryguid-28da-4dd4-b10b-e48c6be09689 HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :param name: The name of the tag to delete.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 204 No Content
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 204: Gallery deleted.
 
 Errors
 ~~~~~~
