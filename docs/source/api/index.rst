@@ -1239,7 +1239,7 @@ List Galleries
 
    .. sourcecode:: http
 
-      GET /v1.1/tags HTTP/1.1
+      GET /api/galleries HTTP/1.1
       Host: portal.id.nec.com.au
       Accept: application/json
       Content-Type: application/json
@@ -1289,6 +1289,60 @@ List Galleries
    :resheader Content-Type: application/json
    :status 200: OK.
 
+Get Gallery
++++++++++++
+
+.. http:get:: /api/galleries/(string:galleryId)
+
+   Retrieve gallery details, including associated applications and their apiKey.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/galleries/galleryguid-327D-4D31-8E25-35891A034220 HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "galleryguid-327D-4D31-8E25-35891A034220",
+        "name": "Staff",
+        "description": "Staff",
+        "size": 10000,
+        "count": 3891,
+        "applications": [
+          {
+            "id": "appId",
+            "name": "Building Access System",
+            "apiKey": [Application API key]
+        ]
+      }
+
+   :>json string id: Gallery id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json int size: Size.
+   :>json int count: Count.
+   :>json array applications: Containing **id** *(string)*: Application id, **name** *(string)*: Name, **apiKey** *(string)*: API Key.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+
 Create Gallery
 ++++++++++++++
 
@@ -1300,7 +1354,7 @@ Create Gallery
 
    .. sourcecode:: http
 
-      POST /v1.1/tags/staff HTTP/1.1
+      POST /api/galleries HTTP/1.1
       Host: portal.id.nec.com.au
       Accept: application/json
       Content-Type: application/json
@@ -1347,7 +1401,7 @@ Create Gallery
    :resheader Content-Type: application/json
    :status 200: Gallery created.
 
-.. note:: The application API Key is only provided in response to creating a gallery.
+.. note:: If the gallery already exists, a 400 response will be returned, with the error type ``Duplicate`` and the existing ``apiKey`` in the message.
 
 Delete Gallery
 ++++++++++++++
@@ -1360,7 +1414,7 @@ Delete Gallery
 
    .. sourcecode:: http
 
-      DELETE /api/gallery/galleryguid-28da-4dd4-b10b-e48c6be09689 HTTP/1.1
+      DELETE /api/galleries/galleryguid-28da-4dd4-b10b-e48c6be09689 HTTP/1.1
       Host: portal.id.nec.com.au
       Accept: application/json
       Content-Type: application/json
@@ -1418,6 +1472,7 @@ Error Codes and Types
 Type           Code Description
 ============== ==== =======================================================================================
 InvalidRequest 1001 Request is invalid, possible missing parameters.
+Duplicate      1002 Duplicate request, identifier in message.
 NoFace         2001 No face was found in the provided image.
 PoorQuality    2002 The overall ``faceQualityScore`` was too low to process.
 MultipleFaces  2003 Multiple faces were found in the image. Only one is permitted for this type of request.
