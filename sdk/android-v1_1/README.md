@@ -20,7 +20,7 @@ You can initialize the SDK using the `ApiClientFactory` object.
 ```
 ApiClientFactory factory = new ApiClientFactory();
 // create a client
-final CoreAPIClient client = factory.build(CoreAPIClient.class);
+final BiometricAPIClient client = factory.build(BiometricAPIClient.class);
 
 // Invoke your faceExtractPost method
 ExtractResult  output = client.faceExtractPost();

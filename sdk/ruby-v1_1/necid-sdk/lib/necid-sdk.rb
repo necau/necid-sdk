@@ -8,7 +8,7 @@ require_relative 'necid-sdk/errors'
 require_relative 'necid-sdk/resource'
 require_relative 'necid-sdk/customizations'
 
-# This module provides support for Core API. This module is available in the
+# This module provides support for Biometric API. This module is available in the
 # `necid-sdk` gem.
 #
 # # Client
@@ -21,7 +21,7 @@ require_relative 'necid-sdk/customizations'
 #
 # # Errors
 #
-# Errors returned from Core API all
+# Errors returned from Biometric API all
 # extend {Errors::ServiceError}.
 #
 #     begin

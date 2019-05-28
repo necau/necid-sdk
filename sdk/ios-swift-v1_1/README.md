@@ -89,7 +89,7 @@ to your list of imports in the bridging header.
 
 1. Grab the `defaultClient` from your code
 
-        let client = NECIDCoreAPIClient.defaultClient()
+        let client = NECIDBiometricAPIClient.defaultClient()
 
 1. You can now call your method using the client SDK
 

@@ -2,7 +2,7 @@ Gem::Specification.new do |spec|
 
   spec.name          = 'necid-sdk'
   spec.version       = File.read(File.expand_path('../VERSION', __FILE__)).strip
-  spec.summary       = 'Core API'
+  spec.summary       = 'Biometric API'
   spec.description   = 'Gem Description'
   spec.author        = 'Author Name'
   spec.homepage      = 'http://gem-homepage.com'

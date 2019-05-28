@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  The service client object.
  */
-@interface NECIDCoreAPIClient: AWSAPIGatewayClient
+@interface NECIDBiometricAPIClient: AWSAPIGatewayClient
 
 /**
  Returns the singleton service client. If the singleton object does not exist, the SDK instantiates the default service client with `defaultServiceConfiguration` from `[AWSServiceManager defaultServiceManager]`. The reference to this object is maintained by the SDK, and you do not need to retain it manually.
@@ -67,13 +67,13 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     let serviceClient = NECIDCoreAPIClient.defaultClient()
+     let serviceClient = NECIDBiometricAPIClient.defaultClient()
 
  *Objective-C*
 
-     NECIDCoreAPIClient *serviceClient = [NECIDCoreAPIClient defaultClient];
+     NECIDBiometricAPIClient *serviceClient = [NECIDBiometricAPIClient defaultClient];
 
- Alternatively, this configuration could also be set in the `info.plist` file of your app under `AWS` dictionary with a configuration dictionary by name `NECIDCoreAPIClient`.
+ Alternatively, this configuration could also be set in the `info.plist` file of your app under `AWS` dictionary with a configuration dictionary by name `NECIDBiometricAPIClient`.
 
  @return The default service client.
  */
@@ -89,7 +89,7 @@ NS_ASSUME_NONNULL_BEGIN
      func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
          let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
          let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-         NECIDCoreAPIClient.registerClientWithConfiguration(configuration, forKey: "USWest2NECIDCoreAPIClient")
+         NECIDBiometricAPIClient.registerClientWithConfiguration(configuration, forKey: "USWest2NECIDBiometricAPIClient")
 
          return true
      }
@@ -102,7 +102,7 @@ NS_ASSUME_NONNULL_BEGIN
          AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSWest2
                                                                               credentialsProvider:credentialsProvider];
 
-         [NECIDCoreAPIClient registerClientWithConfiguration:configuration forKey:@"USWest2NECIDCoreAPIClient"];
+         [NECIDBiometricAPIClient registerClientWithConfiguration:configuration forKey:@"USWest2NECIDBiometricAPIClient"];
 
          return YES;
      }
@@ -111,11 +111,11 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     let serviceClient = NECIDCoreAPIClient(forKey: "USWest2NECIDCoreAPIClient")
+     let serviceClient = NECIDBiometricAPIClient(forKey: "USWest2NECIDBiometricAPIClient")
 
  *Objective-C*
 
-     NECIDCoreAPIClient *serviceClient = [NECIDCoreAPIClient clientForKey:@"USWest2NECIDCoreAPIClient"];
+     NECIDBiometricAPIClient *serviceClient = [NECIDBiometricAPIClient clientForKey:@"USWest2NECIDBiometricAPIClient"];
 
  @warning After calling this method, do not modify the configuration object. It may cause unspecified behaviors.
 
@@ -134,7 +134,7 @@ NS_ASSUME_NONNULL_BEGIN
      func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
          let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
          let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-         NECIDCoreAPIClient.registerClientWithConfiguration(configuration, forKey: "USWest2NECIDCoreAPIClient")
+         NECIDBiometricAPIClient.registerClientWithConfiguration(configuration, forKey: "USWest2NECIDBiometricAPIClient")
 
          return true
      }
@@ -147,7 +147,7 @@ NS_ASSUME_NONNULL_BEGIN
          AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionUSWest2
                                                                               credentialsProvider:credentialsProvider];
 
-         [NECIDCoreAPIClient registerClientWithConfiguration:configuration forKey:@"USWest2NECIDCoreAPIClient"];
+         [NECIDBiometricAPIClient registerClientWithConfiguration:configuration forKey:@"USWest2NECIDBiometricAPIClient"];
 
          return YES;
      }
@@ -156,11 +156,11 @@ NS_ASSUME_NONNULL_BEGIN
 
  *Swift*
 
-     let serviceClient = NECIDCoreAPIClient(forKey: "USWest2NECIDCoreAPIClient")
+     let serviceClient = NECIDBiometricAPIClient(forKey: "USWest2NECIDBiometricAPIClient")
 
  *Objective-C*
 
-     NECIDCoreAPIClient *serviceClient = [NECIDCoreAPIClient clientForKey:@"USWest2NECIDCoreAPIClient"];
+     NECIDBiometricAPIClient *serviceClient = [NECIDBiometricAPIClient clientForKey:@"USWest2NECIDBiometricAPIClient"];
 
  @param key A string to identify the service client.
 

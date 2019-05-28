@@ -1,8 +1,8 @@
 ---
 swagger: "2.0"
 info:
-  version: "2018-10-29T02:37:36Z"
-  title: "Core API"
+  version: "1.0"
+  title: "Biometric API"
 host: "api.id.nec.com.au"
 basePath: "/v1"
 schemes:
