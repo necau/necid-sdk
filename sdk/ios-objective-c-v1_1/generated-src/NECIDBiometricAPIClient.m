@@ -15,7 +15,7 @@
  
 
 
-#import "NECIDCoreAPIClient.h"
+#import "NECIDBiometricAPIClient.h"
 #import <AWSCore/AWSCore.h>
 #import <AWSCore/AWSSignature.h>
 #import <AWSCore/AWSSynchronizedMutableDictionary.h>
@@ -53,7 +53,7 @@
 
 @end
 
-@interface NECIDCoreAPIClient()
+@interface NECIDBiometricAPIClient()
 
 @property (nonatomic, strong) AWSServiceConfiguration *configuration;
 
@@ -65,9 +65,9 @@
 
 @end
 
-@implementation NECIDCoreAPIClient
+@implementation NECIDBiometricAPIClient
 
-static NSString *const AWSInfoClientKey = @"NECIDCoreAPIClient";
+static NSString *const AWSInfoClientKey = @"NECIDBiometricAPIClient";
 
 @synthesize configuration = _configuration;
 
@@ -86,10 +86,10 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
                                                            credentialsProvider:nil];
     }
 
-    static NECIDCoreAPIClient *_defaultClient = nil;
+    static NECIDBiometricAPIClient *_defaultClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _defaultClient = [[NECIDCoreAPIClient alloc] initWithConfiguration:serviceConfiguration];
+        _defaultClient = [[NECIDBiometricAPIClient alloc] initWithConfiguration:serviceConfiguration];
     });
 
     return _defaultClient;
@@ -100,13 +100,13 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
     dispatch_once(&onceToken, ^{
         _serviceClients = [AWSSynchronizedMutableDictionary new];
     });
-    [_serviceClients setObject:[[NECIDCoreAPIClient alloc] initWithConfiguration:configuration]
+    [_serviceClients setObject:[[NECIDBiometricAPIClient alloc] initWithConfiguration:configuration]
                         forKey:key];
 }
 
 + (instancetype)clientForKey:(NSString *)key {
     @synchronized(self) {
-        NECIDCoreAPIClient *serviceClient = [_serviceClients objectForKey:key];
+        NECIDBiometricAPIClient *serviceClient = [_serviceClients objectForKey:key];
         if (serviceClient) {
             return serviceClient;
         }
@@ -116,7 +116,7 @@ static AWSSynchronizedMutableDictionary *_serviceClients = nil;
         if (serviceInfo) {
             AWSServiceConfiguration *serviceConfiguration = [[AWSServiceConfiguration alloc] initWithRegion:serviceInfo.region
                                                                                         credentialsProvider:serviceInfo.cognitoCredentialsProvider];
-            [NECIDCoreAPIClient registerClientWithConfiguration:serviceConfiguration
+            [NECIDBiometricAPIClient registerClientWithConfiguration:serviceConfiguration
                                                     forKey:key];
         }
 

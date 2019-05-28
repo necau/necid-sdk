@@ -9,7 +9,7 @@ import com.amazonaws.annotation.SdkInternalApi;
 import javax.annotation.Generated;
 
 /**
- * Base exception for all service exceptions thrown by Core API
+ * Base exception for all service exceptions thrown by Biometric API
  */
 @Generated("com.amazonaws:aws-java-sdk-code-generator")
 public class NECIDException extends com.amazonaws.SdkBaseException implements BaseException {

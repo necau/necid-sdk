@@ -58,7 +58,7 @@ Import the following:
 #import </NECIDTag.h>
 #import </NECIDJob.h>
 // load API classes for accessing endpoints
-#import </NECIDCoreAPIClient.h>
+#import </NECIDBiometricAPIClient.h>
 
 ```
 
@@ -74,7 +74,7 @@ Please follow the [installation procedure](#installation--usage) and then run th
 
 
 
-NECIDCoreAPIClient *apiInstance = [[NECIDCoreAPIClient alloc] init];
+NECIDBiometricAPIClient *apiInstance = [[NECIDBiometricAPIClient alloc] init];
 
 [apiInstance faceExtractPostWithCompletionHandler: 
               ^(NECIDExtractResult * output, NSError* error) {
@@ -94,38 +94,38 @@ All URIs are relative to *https://api.id.nec.com.au/v1.1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*NECIDCoreAPIClient* | [**faceExtractPost**](NECIDCoreAPIClient.md#faceextractpost) | **POST** /face/extract | 
-*NECIDCoreAPIClient* | [**faceExtractOptions**](NECIDCoreAPIClient.md#faceextractoptions) | **OPTIONS** /face/extract | 
-*NECIDCoreAPIClient* | [**faceSearchPost**](NECIDCoreAPIClient.md#facesearchpost) | **POST** /face/search | 
-*NECIDCoreAPIClient* | [**faceSearchOptions**](NECIDCoreAPIClient.md#facesearchoptions) | **OPTIONS** /face/search | 
-*NECIDCoreAPIClient* | [**faceVerifyPost**](NECIDCoreAPIClient.md#faceverifypost) | **POST** /face/verify | 
-*NECIDCoreAPIClient* | [**faceVerifyOptions**](NECIDCoreAPIClient.md#faceverifyoptions) | **OPTIONS** /face/verify | 
-*NECIDCoreAPIClient* | [**healthGet**](NECIDCoreAPIClient.md#healthget) | **GET** /health | 
-*NECIDCoreAPIClient* | [**healthOptions**](NECIDCoreAPIClient.md#healthoptions) | **OPTIONS** /health | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterPost**](NECIDCoreAPIClient.md#jobsbulkregisterpost) | **POST** /jobs/bulkregister | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterOptions**](NECIDCoreAPIClient.md#jobsbulkregisteroptions) | **OPTIONS** /jobs/bulkregister | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterBatchIdGet**](NECIDCoreAPIClient.md#jobsbulkregisterbatchidget) | **GET** /jobs/bulkregister/{batchId} | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterBatchIdOptions**](NECIDCoreAPIClient.md#jobsbulkregisterbatchidoptions) | **OPTIONS** /jobs/bulkregister/{batchId} | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterBatchIdPagingIdGet**](NECIDCoreAPIClient.md#jobsbulkregisterbatchidpagingidget) | **GET** /jobs/bulkregister/{batchId}/{pagingId} | 
-*NECIDCoreAPIClient* | [**jobsBulkregisterBatchIdPagingIdOptions**](NECIDCoreAPIClient.md#jobsbulkregisterbatchidpagingidoptions) | **OPTIONS** /jobs/bulkregister/{batchId}/{pagingId} | 
-*NECIDCoreAPIClient* | [**subjectsGet**](NECIDCoreAPIClient.md#subjectsget) | **GET** /subjects | 
-*NECIDCoreAPIClient* | [**subjectsPost**](NECIDCoreAPIClient.md#subjectspost) | **POST** /subjects | 
-*NECIDCoreAPIClient* | [**subjectsOptions**](NECIDCoreAPIClient.md#subjectsoptions) | **OPTIONS** /subjects | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdPut**](NECIDCoreAPIClient.md#subjectssubjectidput) | **PUT** /subjects/{subjectId} | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdDelete**](NECIDCoreAPIClient.md#subjectssubjectiddelete) | **DELETE** /subjects/{subjectId} | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdOptions**](NECIDCoreAPIClient.md#subjectssubjectidoptions) | **OPTIONS** /subjects/{subjectId} | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsGet**](NECIDCoreAPIClient.md#subjectssubjectideventsget) | **GET** /subjects/{subjectId}/events | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsPost**](NECIDCoreAPIClient.md#subjectssubjectideventspost) | **POST** /subjects/{subjectId}/events | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsOptions**](NECIDCoreAPIClient.md#subjectssubjectideventsoptions) | **OPTIONS** /subjects/{subjectId}/events | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsEventIdPut**](NECIDCoreAPIClient.md#subjectssubjectideventseventidput) | **PUT** /subjects/{subjectId}/events/{eventId} | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsEventIdDelete**](NECIDCoreAPIClient.md#subjectssubjectideventseventiddelete) | **DELETE** /subjects/{subjectId}/events/{eventId} | 
-*NECIDCoreAPIClient* | [**subjectsSubjectIdEventsEventIdOptions**](NECIDCoreAPIClient.md#subjectssubjectideventseventidoptions) | **OPTIONS** /subjects/{subjectId}/events/{eventId} | 
-*NECIDCoreAPIClient* | [**tagsGet**](NECIDCoreAPIClient.md#tagsget) | **GET** /tags | 
-*NECIDCoreAPIClient* | [**tagsOptions**](NECIDCoreAPIClient.md#tagsoptions) | **OPTIONS** /tags | 
-*NECIDCoreAPIClient* | [**tagsNamePut**](NECIDCoreAPIClient.md#tagsnameput) | **PUT** /tags/{name} | 
-*NECIDCoreAPIClient* | [**tagsNamePost**](NECIDCoreAPIClient.md#tagsnamepost) | **POST** /tags/{name} | 
-*NECIDCoreAPIClient* | [**tagsNameDelete**](NECIDCoreAPIClient.md#tagsnamedelete) | **DELETE** /tags/{name} | 
-*NECIDCoreAPIClient* | [**tagsNameOptions**](NECIDCoreAPIClient.md#tagsnameoptions) | **OPTIONS** /tags/{name} | 
+*NECIDBiometricAPIClient* | [**faceExtractPost**](NECIDBiometricAPIClient.md#faceextractpost) | **POST** /face/extract | 
+*NECIDBiometricAPIClient* | [**faceExtractOptions**](NECIDBiometricAPIClient.md#faceextractoptions) | **OPTIONS** /face/extract | 
+*NECIDBiometricAPIClient* | [**faceSearchPost**](NECIDBiometricAPIClient.md#facesearchpost) | **POST** /face/search | 
+*NECIDBiometricAPIClient* | [**faceSearchOptions**](NECIDBiometricAPIClient.md#facesearchoptions) | **OPTIONS** /face/search | 
+*NECIDBiometricAPIClient* | [**faceVerifyPost**](NECIDBiometricAPIClient.md#faceverifypost) | **POST** /face/verify | 
+*NECIDBiometricAPIClient* | [**faceVerifyOptions**](NECIDBiometricAPIClient.md#faceverifyoptions) | **OPTIONS** /face/verify | 
+*NECIDBiometricAPIClient* | [**healthGet**](NECIDBiometricAPIClient.md#healthget) | **GET** /health | 
+*NECIDBiometricAPIClient* | [**healthOptions**](NECIDBiometricAPIClient.md#healthoptions) | **OPTIONS** /health | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterPost**](NECIDBiometricAPIClient.md#jobsbulkregisterpost) | **POST** /jobs/bulkregister | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterOptions**](NECIDBiometricAPIClient.md#jobsbulkregisteroptions) | **OPTIONS** /jobs/bulkregister | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterBatchIdGet**](NECIDBiometricAPIClient.md#jobsbulkregisterbatchidget) | **GET** /jobs/bulkregister/{batchId} | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterBatchIdOptions**](NECIDBiometricAPIClient.md#jobsbulkregisterbatchidoptions) | **OPTIONS** /jobs/bulkregister/{batchId} | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterBatchIdPagingIdGet**](NECIDBiometricAPIClient.md#jobsbulkregisterbatchidpagingidget) | **GET** /jobs/bulkregister/{batchId}/{pagingId} | 
+*NECIDBiometricAPIClient* | [**jobsBulkregisterBatchIdPagingIdOptions**](NECIDBiometricAPIClient.md#jobsbulkregisterbatchidpagingidoptions) | **OPTIONS** /jobs/bulkregister/{batchId}/{pagingId} | 
+*NECIDBiometricAPIClient* | [**subjectsGet**](NECIDBiometricAPIClient.md#subjectsget) | **GET** /subjects | 
+*NECIDBiometricAPIClient* | [**subjectsPost**](NECIDBiometricAPIClient.md#subjectspost) | **POST** /subjects | 
+*NECIDBiometricAPIClient* | [**subjectsOptions**](NECIDBiometricAPIClient.md#subjectsoptions) | **OPTIONS** /subjects | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdPut**](NECIDBiometricAPIClient.md#subjectssubjectidput) | **PUT** /subjects/{subjectId} | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdDelete**](NECIDBiometricAPIClient.md#subjectssubjectiddelete) | **DELETE** /subjects/{subjectId} | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdOptions**](NECIDBiometricAPIClient.md#subjectssubjectidoptions) | **OPTIONS** /subjects/{subjectId} | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsGet**](NECIDBiometricAPIClient.md#subjectssubjectideventsget) | **GET** /subjects/{subjectId}/events | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsPost**](NECIDBiometricAPIClient.md#subjectssubjectideventspost) | **POST** /subjects/{subjectId}/events | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsOptions**](NECIDBiometricAPIClient.md#subjectssubjectideventsoptions) | **OPTIONS** /subjects/{subjectId}/events | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsEventIdPut**](NECIDBiometricAPIClient.md#subjectssubjectideventseventidput) | **PUT** /subjects/{subjectId}/events/{eventId} | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsEventIdDelete**](NECIDBiometricAPIClient.md#subjectssubjectideventseventiddelete) | **DELETE** /subjects/{subjectId}/events/{eventId} | 
+*NECIDBiometricAPIClient* | [**subjectsSubjectIdEventsEventIdOptions**](NECIDBiometricAPIClient.md#subjectssubjectideventseventidoptions) | **OPTIONS** /subjects/{subjectId}/events/{eventId} | 
+*NECIDBiometricAPIClient* | [**tagsGet**](NECIDBiometricAPIClient.md#tagsget) | **GET** /tags | 
+*NECIDBiometricAPIClient* | [**tagsOptions**](NECIDBiometricAPIClient.md#tagsoptions) | **OPTIONS** /tags | 
+*NECIDBiometricAPIClient* | [**tagsNamePut**](NECIDBiometricAPIClient.md#tagsnameput) | **PUT** /tags/{name} | 
+*NECIDBiometricAPIClient* | [**tagsNamePost**](NECIDBiometricAPIClient.md#tagsnamepost) | **POST** /tags/{name} | 
+*NECIDBiometricAPIClient* | [**tagsNameDelete**](NECIDBiometricAPIClient.md#tagsnamedelete) | **DELETE** /tags/{name} | 
+*NECIDBiometricAPIClient* | [**tagsNameOptions**](NECIDBiometricAPIClient.md#tagsnameoptions) | **OPTIONS** /tags/{name} | 
 
 
 ## Documentation For Models

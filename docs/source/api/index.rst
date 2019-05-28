@@ -715,8 +715,7 @@ Extract
 
    :>json array faces: Containing **attributes**: See `Face Attributes`_.
    :resheader Content-Type: application/json
-   :status 200: Candidates found.
-   :status 404: Candidates not found.
+   :status 200: Face attributes extracted.
 
 Search
 ++++++
@@ -1307,6 +1306,7 @@ Get Gallery
       x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
       Authorization: [AWS Signature Version 4]
 
+   :param galleryId: Gallery id.
    :reqheader Host: portal.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader Content-Type: application/json
@@ -1328,7 +1328,7 @@ Get Gallery
         "count": 3891,
         "applications": [
           {
-            "id": "appId",
+            "id": "applicationId02",
             "name": "Building Access System",
             "apiKey": [Application API key]
         ]
@@ -1364,14 +1364,14 @@ Create Gallery
       {
         "name": "Y10Students",
         "description": "Year 10 Students",
-        "faceMinimumQualityScore": "0.8",
+        "faceMinimumQualityScore": 0.8,
         "size": 1000,
       }
 
    :<json string name: Name of the gallery.
    :<json string description: Description of the gallery.
-   :<json string faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_.
-   :<json string size: Size of the gallery.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_, must be greater than or equal to 0.45.
+   :<json int size: Size of the gallery.
    :reqheader Host: portal.id.nec.com.au
    :reqheader Accept: application/json
    :reqheader Content-Type: application/json
@@ -1402,6 +1402,63 @@ Create Gallery
    :status 200: Gallery created.
 
 .. note:: If the gallery already exists, a 400 response will be returned, with the error type ``Duplicate`` and the existing ``apiKey`` in the message.
+
+Update Gallery
+++++++++++++++
+
+.. http:patch:: /api/galleries/(string:galleryId)
+
+   Update a gallery.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      PATCH /api/galleries HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "name": "Y10Students",
+        "description": "Year 10 Students",
+        "size": 2000,
+      }
+
+   :param galleryId: Gallery id.
+   :<json string name: Name of the gallery.
+   :<json string description: Description of the gallery.
+   :<json int size: Size of the gallery.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "galleryguid-28da-4dd4-b10b-e48c6be09689",
+        "name": "Y10Students",
+        "description": "Year 10 Students",
+        "size": 2000
+      }
+
+   :>json string id: Gallery id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json int size: Size.
+   :resheader Content-Type: application/json
+   :status 200: Gallery updated.
+
+.. note:: Gallery size can only be increased.
 
 Delete Gallery
 ++++++++++++++
@@ -1437,6 +1494,259 @@ Delete Gallery
 
    :resheader Content-Type: application/json
    :status 204: Gallery deleted.
+
+Applications
+~~~~~~~~~~~~
+
+Manage tenant applications.
+
+List Applications
++++++++++++++++++
+
+.. http:get:: /api/applications
+
+   Retrieve all applications.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/applications HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "applications": [
+          {
+            "id": "applicationId01",
+            "name": "HR System",
+            "apiKey": [Application API key]
+          },
+          {
+            "id": "applicationId02",
+            "name": "Building Access System",
+            "apiKey": [Application API key]
+          }
+        ]
+      }
+
+   :>json array applications: Containing **id** *(string)*: Application id, **name** *(string)*: Name, **apiKey** *(string)*: Application API Key.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+
+Get Application
++++++++++++++++
+
+.. http:get:: /api/applications/(string:applicationId)
+
+   Retrieve application details.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      GET /api/applications/applicationId01 HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :param applicationId: Application id.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "applicationId01",
+        "name": "HR System",
+        "description": "HR System",
+        "apiKey": [Application API key],
+        "faceMinimumQualityScore": 0.6
+      }
+
+   :>json string id: Gallery id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json string apiKey: Application API Key.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_.
+   :resheader Content-Type: application/json
+   :status 200: OK.
+
+Create Application
+++++++++++++++++++
+
+.. http:post:: /api/applications
+
+   Create an application.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /api/applications HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "name": "Building Access System",
+        "description": "Building Access System",
+        "faceMinimumQualityScore": 0.8,
+        "galleryId": "galleryguid-327D-4D31-8E25-35891A034220",
+      }
+
+   :<json string name: Name of the application.
+   :<json string description: Description of the application.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_, must be greater than or equal to 0.45.
+   :<json string galleryId: Id of the target gallery.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "applicationId02",
+        "name": "Building Access System",
+        "description": "Building Access System",
+        "apiKey": [Application API key],
+        "faceMinimumQualityScore": 0.8
+      }
+
+   :>json string id: Application id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json string apiKey: Application API Key.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_.
+   :resheader Content-Type: application/json
+   :status 200: Application created.
+
+Update Application
+++++++++++++++++++
+
+.. http:patch:: /api/applications/(string:applicationId)
+
+   Update an application.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      PATCH /api/applications HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "name": "Building Access System",
+        "description": "Building Access System",
+        "faceMinimumQualityScore": 0.6
+      }
+
+   :param applicationId: Application id.
+   :<json string name: Name of the application.
+   :<json string description: Description of the application.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_, must be greater than or equal to 0.45.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "applicationId02",
+        "name": "Building Access System",
+        "description": "Building Access System"
+        "apiKey": [Application API key],
+        "faceMinimumQualityScore": 0.8
+      }
+
+   :>json string id: Application id.
+   :>json string name: Name.
+   :>json string description: Description.
+   :>json string apiKey: Application API Key.
+   :<json float faceMinimumQualityScore: Minimum estimated overall quality of face - see `Face Attributes`_.
+   :resheader Content-Type: application/json
+   :status 200: Application updated.
+
+Delete Application
+++++++++++++++++++
+
+.. http:delete:: /api/applications/(string:applicationId)
+
+   Deletes an application.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      DELETE /api/applications/applicationid02 HTTP/1.1
+      Host: portal.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+   :param applicationId: Application id.
+   :reqheader Host: portal.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 204 No Content
+      Content-Type: application/json
+
+   :resheader Content-Type: application/json
+   :status 204: Application deleted.
 
 Error Handling
 --------------

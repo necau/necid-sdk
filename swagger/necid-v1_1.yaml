@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   version: "1.1"
-  title: "Core API"
+  title: "Biometric API"
 host: "api.id.nec.com.au"
 basePath: "/v1.1"
 schemes:

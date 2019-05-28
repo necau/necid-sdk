@@ -30,7 +30,7 @@ import au.com.nec.id.client.model.Tag;
 
 
 @com.amazonaws.mobileconnectors.apigateway.annotation.Service(endpoint = "https://api.id.nec.com.au/v1.1")
-public interface CoreAPIClient {
+public interface BiometricAPIClient {
 
 
     /**

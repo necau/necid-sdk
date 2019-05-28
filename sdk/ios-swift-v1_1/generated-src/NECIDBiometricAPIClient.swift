@@ -17,12 +17,12 @@
 import AWSCore
 import AWSAPIGateway
 
-public class NECIDCoreAPIClient: AWSAPIGatewayClient {
+public class NECIDBiometricAPIClient: AWSAPIGatewayClient {
 
-	static let AWSInfoClientKey = "NECIDCoreAPIClient"
+	static let AWSInfoClientKey = "NECIDBiometricAPIClient"
 
 	private static let _serviceClients = AWSSynchronizedMutableDictionary()
-	private static let _defaultClient:NECIDCoreAPIClient = {
+	private static let _defaultClient:NECIDBiometricAPIClient = {
 		var serviceConfiguration: AWSServiceConfiguration? = nil
         let serviceInfo = AWSInfo.default().defaultServiceInfo(AWSInfoClientKey)
         if let serviceInfo = serviceInfo {
@@ -33,7 +33,7 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
             serviceConfiguration = AWSServiceConfiguration(region: .Unknown, credentialsProvider: nil)
         }
         
-        return NECIDCoreAPIClient(configuration: serviceConfiguration!)
+        return NECIDBiometricAPIClient(configuration: serviceConfiguration!)
 	}()
     
 	/**
@@ -51,14 +51,14 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	
 	 Then call the following to get the default service client:
 	
-	     let serviceClient = NECIDCoreAPIClient.default()
+	     let serviceClient = NECIDBiometricAPIClient.default()
 
-     Alternatively, this configuration could also be set in the `info.plist` file of your app under `AWS` dictionary with a configuration dictionary by name `NECIDCoreAPIClient`.
+     Alternatively, this configuration could also be set in the `info.plist` file of your app under `AWS` dictionary with a configuration dictionary by name `NECIDBiometricAPIClient`.
 	
 	 @return The default service client.
 	 */ 
 	 
-	public class func `default`() -> NECIDCoreAPIClient{
+	public class func `default`() -> NECIDBiometricAPIClient{
 		return _defaultClient
 	}
 
@@ -70,7 +70,7 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 	         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
 	         let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-	         NECIDCoreAPIClient.registerClient(withConfiguration: configuration, forKey: "USWest2NECIDCoreAPIClient")
+	         NECIDBiometricAPIClient.registerClient(withConfiguration: configuration, forKey: "USWest2NECIDBiometricAPIClient")
 	
 	         return true
 	     }
@@ -78,7 +78,7 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	 Then call the following to get the service client:
 	
 	
-	     let serviceClient = NECIDCoreAPIClient.client(forKey: "USWest2NECIDCoreAPIClient")
+	     let serviceClient = NECIDBiometricAPIClient.client(forKey: "USWest2NECIDBiometricAPIClient")
 	
 	 @warning After calling this method, do not modify the configuration object. It may cause unspecified behaviors.
 	
@@ -87,7 +87,7 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	 */
 	
 	public class func registerClient(withConfiguration configuration: AWSServiceConfiguration, forKey key: String){
-		_serviceClients.setObject(NECIDCoreAPIClient(configuration: configuration), forKey: key  as NSString);
+		_serviceClients.setObject(NECIDBiometricAPIClient(configuration: configuration), forKey: key  as NSString);
 	}
 
 	/**
@@ -98,21 +98,21 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 	     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 	         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "YourIdentityPoolId")
 	         let configuration = AWSServiceConfiguration(region: .USWest2, credentialsProvider: credentialProvider)
-	         NECIDCoreAPIClient.registerClient(withConfiguration: configuration, forKey: "USWest2NECIDCoreAPIClient")
+	         NECIDBiometricAPIClient.registerClient(withConfiguration: configuration, forKey: "USWest2NECIDBiometricAPIClient")
 	
 	         return true
 	     }
 	
 	 Then call the following to get the service client:
 	 
-	 	let serviceClient = NECIDCoreAPIClient.client(forKey: "USWest2NECIDCoreAPIClient")
+	 	let serviceClient = NECIDBiometricAPIClient.client(forKey: "USWest2NECIDBiometricAPIClient")
 	 
 	 @param key A string to identify the service client.
 	 @return An instance of the service client.
 	 */
-	public class func client(forKey key: String) -> NECIDCoreAPIClient {
+	public class func client(forKey key: String) -> NECIDBiometricAPIClient {
 		objc_sync_enter(self)
-		if let client: NECIDCoreAPIClient = _serviceClients.object(forKey: key) as? NECIDCoreAPIClient {
+		if let client: NECIDBiometricAPIClient = _serviceClients.object(forKey: key) as? NECIDBiometricAPIClient {
 			objc_sync_exit(self)
 		    return client
 		}
@@ -120,10 +120,10 @@ public class NECIDCoreAPIClient: AWSAPIGatewayClient {
 		let serviceInfo = AWSInfo.default().defaultServiceInfo(AWSInfoClientKey)
 		if let serviceInfo = serviceInfo {
 			let serviceConfiguration = AWSServiceConfiguration(region: serviceInfo.region, credentialsProvider: serviceInfo.cognitoCredentialsProvider)
-			NECIDCoreAPIClient.registerClient(withConfiguration: serviceConfiguration!, forKey: key)
+			NECIDBiometricAPIClient.registerClient(withConfiguration: serviceConfiguration!, forKey: key)
 		}
 		objc_sync_exit(self)
-		return _serviceClients.object(forKey: key) as! NECIDCoreAPIClient;
+		return _serviceClients.object(forKey: key) as! NECIDBiometricAPIClient;
 	}
 
 	/**
