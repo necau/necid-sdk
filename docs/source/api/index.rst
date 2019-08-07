@@ -745,7 +745,7 @@ Search
 
    :<json string probe: Base64 encoded image.
    :<json int threshold: Optional score threshold, ranges from 0 to 9999, default is 7000.
-   :<json int limit: Optional limit of total events retunred, ranges from 1 to 50, default is 10.
+   :<json int limit: Optional limit of total events returned, ranges from 1 to 50, default is 10.
    :<json array tags: Option list of tag names to refine the search against, using OR to filter subjects.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
