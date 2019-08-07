@@ -745,7 +745,7 @@ Search
 
    :<json string probe: Base64 encoded image.
    :<json int threshold: Optional score threshold, ranges from 0 to 9999, default is 7000.
-   :<json int limit: Optional limit, ranges from 1 to 50, default is 10.
+   :<json int limit: Optional limit of total events returned, ranges from 1 to 50, default is 10.
    :<json array tags: Option list of tag names to refine the search against, using OR to filter subjects.
    :reqheader Host: api.id.nec.com.au
    :reqheader Accept: application/json
@@ -773,16 +773,6 @@ Search
               },
               {
                 "id": "eventguid-f99a-41dc-8eb1-cd7b1b3dcdec"
-                "score": 8000
-              }
-            ]
-          },
-          {
-            "id": "necidguid-ad57-465b-b538-71b6c9b02447",
-            "score": 8000,
-            "events": [
-              {
-                "id": "eventguid-37f4-4bd9-9d64-27ed466bdb78"
                 "score": 8000
               }
             ]
@@ -828,7 +818,7 @@ Search
         }
       }
 
-   :>json array candidates: Containing **id** *(string)*: Subject id and **score** *(int)*: Match score.
+   :>json array candidates: Containing **id** *(string)*: Subject id, **score** *(int)*: Highest match score and **event** *(array)*: Containing **id** *(string)*: Event id and **score** *(int)*: Match score.
    :>json attributes: See `Face Attributes`_.
    :resheader Content-Type: application/json
    :status 200: Candidates found.
@@ -839,7 +829,7 @@ Verify
 
 .. http:post:: /v1.1/face/verify
 
-   Verify a subject against a probe.
+   Verify a subject, and their one or more events, against a probe.
 
    **Example request**:
 
@@ -880,7 +870,7 @@ Verify
       }
 
    :>json string id: Subject id.
-   :>json int score: Match score.
+   :>json int score: Match score of the subject's hightest scoring event.
    :resheader Content-Type: application/json
    :status 200: Subject verified.
    :status 404: Subject not verified.
@@ -1783,6 +1773,7 @@ Type           Code Description
 ============== ==== =======================================================================================
 InvalidRequest 1001 Request is invalid, possible missing parameters.
 Duplicate      1002 Duplicate request, identifier in message.
+Timeout        1003 Request timed out.
 NoFace         2001 No face was found in the provided image.
 PoorQuality    2002 The overall ``faceQualityScore`` was too low to process.
 MultipleFaces  2003 Multiple faces were found in the image. Only one is permitted for this type of request.
