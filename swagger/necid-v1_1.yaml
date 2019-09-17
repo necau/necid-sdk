@@ -59,7 +59,6 @@ paths:
           description: "404 response"
       security:
       - sigv4: []
-      - api_key: []
     options:
       responses:
         200:

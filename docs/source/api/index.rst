@@ -612,8 +612,8 @@ Face
 
 Extract faces, search and verify probe images against registered subjects.
 
-Extract
-+++++++
+Extract Faces
++++++++++++++
 
 .. http:post:: /v1.1/face/extract
 
@@ -717,8 +717,8 @@ Extract
    :resheader Content-Type: application/json
    :status 200: Face attributes extracted.
 
-Search
-++++++
+Search Subjects
++++++++++++++++
 
 .. http:post:: /v1.1/face/search
 
@@ -824,8 +824,8 @@ Search
    :status 200: Candidates found.
    :status 404: Candidates not found.
 
-Verify
-++++++
+Verify Subject
+++++++++++++++
 
 .. http:post:: /v1.1/face/verify
 
@@ -871,6 +871,54 @@ Verify
 
    :>json string id: Subject id.
    :>json int score: Match score of the subject's hightest scoring event.
+   :resheader Content-Type: application/json
+   :status 200: Subject verified.
+   :status 404: Subject not verified.
+
+Verify Face
++++++++++++
+
+.. http:post:: /v1.1/face/verify
+
+   Verify a face against a probe.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/face/verify HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "probe": "[PROBE]",
+        "face": "[FACE]"
+      }
+
+   :<json string probe: Base64 encoded image.
+   :<json string face: Base64 encoded image.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "score": 8200
+      }
+
+   :>json int score: Match score.
    :resheader Content-Type: application/json
    :status 200: Subject verified.
    :status 404: Subject not verified.
