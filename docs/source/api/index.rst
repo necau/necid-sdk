@@ -717,6 +717,105 @@ Extract Faces
    :resheader Content-Type: application/json
    :status 200: Face attributes extracted.
 
+Verify Face
++++++++++++
+
+.. http:post:: /v1.1/face/verify
+
+   Verify a face against a probe.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/face/verify HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "face": "[FACE]",
+        "probe": "[PROBE]"
+      }
+
+   :<json string probe: Base64 encoded image.
+   :<json string face: Base64 encoded image.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "score": 8200
+      }
+
+   :>json int score: Match score.
+   :resheader Content-Type: application/json
+   :status 200: Subject verified.
+   :status 404: Subject not verified.
+
+Verify Subject
+++++++++++++++
+
+.. http:post:: /v1.1/face/verify
+
+   Verify a subject, and their one or more events, against a probe.
+
+   **Example request**:
+
+   .. sourcecode:: http
+
+      POST /v1.1/face/verify HTTP/1.1
+      Host: api.id.nec.com.au
+      Accept: application/json
+      Content-Type: application/json
+      x-api-key: [Application API key]
+      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
+      Authorization: [AWS Signature Version 4]
+
+      {
+        "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "probe": "[PROBE]"
+      }
+
+   :<json string probe: Base64 encoded image.
+   :<json string id: Subject id.
+   :reqheader Host: api.id.nec.com.au
+   :reqheader Accept: application/json
+   :reqheader Content-Type: application/json
+   :reqheader x-api-key: Application API Key.
+   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
+   :reqheader Authorization: AWS Signature Version 4.
+
+   **Example response**:
+
+   .. sourcecode:: http
+
+      HTTP/1.1 200 OK
+      Content-Type: application/json
+
+      {
+        "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
+        "score": 8200
+      }
+
+   :>json string id: Subject id.
+   :>json int score: Match score of the subject's hightest scoring event.
+   :resheader Content-Type: application/json
+   :status 200: Subject verified.
+   :status 404: Subject not verified.
+
 Search Subjects
 +++++++++++++++
 
@@ -823,105 +922,6 @@ Search Subjects
    :resheader Content-Type: application/json
    :status 200: Candidates found.
    :status 404: Candidates not found.
-
-Verify Subject
-++++++++++++++
-
-.. http:post:: /v1.1/face/verify
-
-   Verify a subject, and their one or more events, against a probe.
-
-   **Example request**:
-
-   .. sourcecode:: http
-
-      POST /v1.1/face/verify HTTP/1.1
-      Host: api.id.nec.com.au
-      Accept: application/json
-      Content-Type: application/json
-      x-api-key: [Application API key]
-      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
-      Authorization: [AWS Signature Version 4]
-
-      {
-        "probe": "[PROBE]",
-        "id": necidguid-fcdf-49eb-9182-5a6825ed2a3b
-      }
-
-   :<json string probe: Base64 encoded image.
-   :<json string id: Subject id.
-   :reqheader Host: api.id.nec.com.au
-   :reqheader Accept: application/json
-   :reqheader Content-Type: application/json
-   :reqheader x-api-key: Application API Key.
-   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
-   :reqheader Authorization: AWS Signature Version 4.
-
-   **Example response**:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-        "id": "necidguid-fcdf-49eb-9182-5a6825ed2a3b",
-        "score": 8200
-      }
-
-   :>json string id: Subject id.
-   :>json int score: Match score of the subject's hightest scoring event.
-   :resheader Content-Type: application/json
-   :status 200: Subject verified.
-   :status 404: Subject not verified.
-
-Verify Face
-+++++++++++
-
-.. http:post:: /v1.1/face/verify
-
-   Verify a face against a probe.
-
-   **Example request**:
-
-   .. sourcecode:: http
-
-      POST /v1.1/face/verify HTTP/1.1
-      Host: api.id.nec.com.au
-      Accept: application/json
-      Content-Type: application/json
-      x-amz-date: [YYYYMMDD'T'HHMMSS'Z' UTC timestamp]
-      Authorization: [AWS Signature Version 4]
-
-      {
-        "probe": "[PROBE]",
-        "face": "[FACE]"
-      }
-
-   :<json string probe: Base64 encoded image.
-   :<json string face: Base64 encoded image.
-   :reqheader Host: api.id.nec.com.au
-   :reqheader Accept: application/json
-   :reqheader Content-Type: application/json
-   :reqheader x-api-key: Application API Key.
-   :reqheader x-amz-date: UTC timestamp using ISO 8601 format: YYYYMMDD'T'HHMMSS'Z'.
-   :reqheader Authorization: AWS Signature Version 4.
-
-   **Example response**:
-
-   .. sourcecode:: http
-
-      HTTP/1.1 200 OK
-      Content-Type: application/json
-
-      {
-        "score": 8200
-      }
-
-   :>json int score: Match score.
-   :resheader Content-Type: application/json
-   :status 200: Subject verified.
-   :status 404: Subject not verified.
 
 Tags
 ~~~~
