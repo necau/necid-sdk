@@ -1186,20 +1186,20 @@ Bulk Register Progress
    :resheader Content-Type: application/json
    :status 200: OK
 
-   Register Request Summaries
-   ++++++++++++++++++++++++++
+Register Request Summaries
+++++++++++++++++++++++++++
 
-   Object describing a register request summary which contains the subjectId and eventId on success.
+Object describing a register request summary which contains the subjectId and eventId on success.
 
-   :id: The operation id. Note this is not the subject or event id.
-   :filename: The filename from the original request.
-   :attempts: The number of attempts.
-   :eventId: The event id on success.
-   :subjectId: The subject id on success.
-   :registerStatus: Once the status is "Processed", this will have a value of "Success" or "Failed".
-   :reason: The failure reason on failure.
-   :status: The status of the operation. Either "New" or "Processed".
-   :attributesJson: The Face Attributes - see `Face Attributes`_.
+:id: The operation id. Note this is not the subject or event id.
+:filename: The filename from the original request.
+:attempts: The number of attempts.
+:eventId: The event id on success.
+:subjectId: The subject id on success.
+:registerStatus: Once the status is "Processed", this will have a value of "Success" or "Failed".
+:reason: The failure reason on failure.
+:status: The status of the operation. Either "New" or "Processed".
+:attributesJson: The Face Attributes - see `Face Attributes`_.
 
 Health
 ~~~~~~
