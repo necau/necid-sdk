@@ -20,7 +20,7 @@ import sys
 # -- Project information -----------------------------------------------------
 
 project = 'NEC ID'
-copyright = '2019, NEC Australia'
+copyright = '2023, NEC Australia'
 author = 'NEC Australia'
 
 # The short X.Y version
